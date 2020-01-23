@@ -1,0 +1,24 @@
+<template class="task-template">
+  <section id="page2">
+    <div class="form-item">
+      <label for="file">选择目标文件夹：</label>
+      <input type="file" id="file" name="file" style="display: none;" webkitdirectory directory>
+      <span id="directoryText">D:/test/oa/</span>
+    </div>
+    <div class="form-item">
+      <button id="preview" ><</button>
+      <span>移动到</span>
+      <select name="case" id="case">
+        <option value="case1">case1</option>
+        <option value="case2">case2</option>
+      </select>
+      <button id="next" >></button>
+    </div>
+    <div class="form-item">
+      <button type="submit" class="button" id="btn_end">结束测试</button> 
+    </div>
+    <script type="text/javascript">
+      require('./renderer-process/cp')
+    </script>
+  </section>
+</template>
