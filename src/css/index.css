@@ -1,0 +1,193 @@
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    line-height: 1.5;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    font-size: 12px;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+p,
+blockquote,
+th,
+td {
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 100%;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+strong,
+th,
+var,
+optgroup {
+    font-style: normal;
+}
+
+input,
+button,
+textarea,
+select,
+optgroup,
+option {
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    *font-size: 100%;
+}
+
+fieldset,
+img,
+a img,
+:link img,
+:visited img {
+    border: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+:focus {
+    outline: 0;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+caption,
+th {
+    text-align: left;
+}
+
+sup,
+sub {
+    font-size: 100%;
+    vertical-align: baseline;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after {
+    content: '';
+    content: none;
+}
+
+.fn-left{
+    float: left;
+}
+
+.fn-right{
+    float: right;
+}
+
+.hidden,
+.fn-hidden{
+    overflow: hidden;
+}
+
+.clear {
+    *zoom: 1;
+}
+
+.clear:after {
+    content: "";
+    clear: both;
+    display: block;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+.common_wrap {
+    width: 960px;
+    margin: 0 auto;
+}
+
+
+
+.form-item {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+input,
+textarea,
+select {
+    padding: 5px;
+    width: 200px;
+    font-size: 16px;
+    border-radius: 3px;
+    border: 1px solid #888;
+}
+
+textarea {
+    height: 200px;
+}
+
+.button {
+    font-size: 16px;
+    line-height: 30px;
+    width: 140px;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    background: #66b;
+}
+body > section{
+    padding: 15px;
+    display: none;
+}

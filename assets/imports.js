@@ -3,7 +3,5 @@ const links = document.querySelectorAll('link[rel="import"]')
 Array.prototype.forEach.call(links, (link) => {
   let template = link.import.querySelector('.task-template')
   let clone = document.importNode(template.content, true)
-  console.log(clone,link)
   document.querySelector('body').appendChild(clone)
-
 })

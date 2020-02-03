@@ -1,16 +1,17 @@
 <template class="task-template">
-  <section id="page1">
+  <section id="section_1" style="display: block;">
     <form id="form">
       <div class="form-item">
-        <span>项目名称：</span>
-        <input type="text" value="D:\cut\temp\" id="folder">
+        <span>目录地址：</span>
+        <input type="text" value="C:\Users\gujj\Documents\cut" id="screenshotFolder">
       </div>
-      <!-- <div>
-        <input type="text" value="D:\cut\temp\" id="folder">
-      </div> -->
+      <div class="form-item">
+        <span>项目名称：</span>
+        <input type="text" value="CRM" id="projectName">
+      </div>
       <div class="form-item" style="display: flex;;">
           <span>case列表：</span>
-          <textarea id="textarea"></textarea> 
+          <textarea id="caseList">case2&#13;case3</textarea>
       </div>
       <div class="form-item">
         <button type="submit" class="button" id="btn_start">开始测试</button> 

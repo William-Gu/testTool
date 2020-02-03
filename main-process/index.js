@@ -1,41 +1,28 @@
-const { ipcMain } = require('electron')
-var fs = require("fs");
-var path = require("path");
+const { ipcMain } = require('electron'),
+  {mkdirsSync, delDir} = require("./tool.js"),
+  fs = require("fs"),
+  path = require("path");
 
-function mkdirs(dirname, callback) {
-  fs.exists(dirname, function (exists) {
-    if (exists) {
-      callback();
-    } else {
-      // console.log(path.dirname(dirname)); 
-      mkdirs(path.dirname(dirname), function () {
-        fs.mkdir(dirname, callback);
-        console.log('在' + path.dirname(dirname) + '目录创建好' + dirname + '目录');
-      });
-    }
-  });
-}
 
-function mkdirsSync(dirname) {
-  if (fs.existsSync(dirname)) {
-    return true;
-  } else {
-    if (mkdirsSync(path.dirname(dirname))) {
-      fs.mkdirSync(dirname);
-      return true;
-    }
-  }
-}
 ipcMain.on('gogogo', (event, arg) => {
   console.log("gogogo");
 })
-ipcMain.on('asynchronous-message', (event, arg) => {
-  console.log(12,'asynchronous-message');
-  arg.path.forEach(item => {
-    let path = arg.folder + "/" + item
-    // console.log(path);
-    mkdirsSync(path)
+ipcMain.on('createProject', (event, arg) => {
+  console.log(12,'createProject', arg );
+  let tempSpace = path.resolve(__dirname,"../tempSpace")
+  console.log(tempSpace, fs.existsSync(tempSpace));
+
+  if(!fs.existsSync(tempSpace)){
+    fs.mkdirSync(tempSpace);
+  }else{
+    delDir(tempSpace)
+  }
+  
+  arg.caseList.forEach(item => {
+    let filePath = tempSpace + "/" + item
+    // console.log(filePath);
+    mkdirsSync(filePath)
   });
-  event.sender.send('asynchronous-reply', 200)
+  event.sender.send('createProjectResponse', {code: 200, data: arg})
 })
 
