@@ -7,6 +7,7 @@ const { ipcMain } = require('electron'),
 ipcMain.on('gogogo', (event, arg) => {
   console.log("gogogo");
 })
+// 创建项目、目录
 ipcMain.on('createProject', (event, arg) => {
   console.log(12,'createProject', arg );
   let tempSpace = path.resolve(__dirname,"../tempSpace")
@@ -17,7 +18,7 @@ ipcMain.on('createProject', (event, arg) => {
   }else{
     delDir(tempSpace)
   }
-  
+
   arg.caseList.forEach(item => {
     let filePath = tempSpace + "/" + item
     // console.log(filePath);
@@ -26,3 +27,6 @@ ipcMain.on('createProject', (event, arg) => {
   event.sender.send('createProjectResponse', {code: 200, data: arg})
 })
 
+ipcMain.on('toggleCurrentCase', (event, arg) => {
+  console.log(arg);
+})

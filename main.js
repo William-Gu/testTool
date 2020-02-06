@@ -38,6 +38,15 @@ function createWindow () {
     // 与此同时，你应该删除相应的元素。
     win = null
   })
+console.log(123213,path.join(__dirname,"./others/FastStone"));
+  const child_process = require('child_process');
+  // const path=require('path');
+  var old=child_process.spawn('npm',['run','openFSCapture'],{
+    cwd:path.join(__dirname,"./"),//运行子进程的目录
+    detached:true, //让父进程退出后，子进程能独立运行
+    shell: process.platform === 'win32',
+    windowsHide: true
+  });
 }
 app.setName('Electron APIs')
 // Electron 会在初始化后并准备
