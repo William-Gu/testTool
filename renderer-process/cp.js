@@ -1,7 +1,7 @@
 const {ipcRenderer, remote} = require('electron')
 
 const $select_case = $("#select_case");
-let currentCase = ""
+let formData={};
 /**
  * 选择case改选项
  * 前、后按钮操作：是否disabled
@@ -76,19 +76,20 @@ function caseValitor(params){
 }
 $("#btn_preview").on('click', function(e){
   let v = caseValitor(0);
-  ipcRenderer.send('toggleCurrentCase', currentCase)
-  currentCase = v;
+  console.log(formData);
+  ipcRenderer.send('toggleCurrentCase', formData)
+  formData.currentCase = v;
 })
 $("#btn_next").on('click', function(e) {
   let v = caseValitor(1);
-  ipcRenderer.send('toggleCurrentCase', currentCase)
-  currentCase = v;
+  ipcRenderer.send('toggleCurrentCase', formData)
+  formData.currentCase = v;
 })
 
 $("#select_case").on('change', function(e){
   let v = caseValitor($(this).val());
-  ipcRenderer.send('toggleCurrentCase', currentCase)
-  currentCase = v;
+  ipcRenderer.send('toggleCurrentCase', formData)
+  formData.currentCase = v;
 })
 $("#btn_end").on('click', (e) => {
 
@@ -96,6 +97,7 @@ $("#btn_end").on('click', (e) => {
 
 ipcRenderer.on('createProjectResponse', (event, arg) => {
   if(arg.code === 200){
+    formData = arg.data;
     let caseList = arg.data.caseList;
     // 1. 创建第二窗口
     let caseListDom = caseList.map(function(item){
@@ -103,7 +105,7 @@ ipcRenderer.on('createProjectResponse', (event, arg) => {
     }).join("");
 
     $("#section_2 #select_case").html(caseListDom)
-    currentCase = caseList[0];
+    formData.currentCase = caseList[0];
     caseValitor(caseList[0]);
     toggleSection("section_2")
     // 2.调整窗口大小

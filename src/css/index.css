@@ -185,7 +185,10 @@ select {
     border-radius: 3px;
     border: 1px solid #888;
 }
-
+input[type=radio]{
+    margin-right: 5px;
+    width: 10px;
+}
 textarea {
     height: 200px;
 }

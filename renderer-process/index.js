@@ -5,13 +5,14 @@ var formData = {
   screenshotFolder: "", // 截图工具目录
   projectName: "", //项目名称
   caseList: [], // 测试用例case列表
+  initialInput: ""
 };
 
 function valiateForm(){
   let screenshotFolder = $("#screenshotFolder").val(),
     projectName = $("#projectName").val(),
     caseList = $("#caseList").val().split("\n").filter(i => i != "")
-
+    initialInput = $("input[type='radio']:checked").val() === "true";
   if(!screenshotFolder){
     alert("请输入文件目录地址")
     return false;
@@ -28,7 +29,8 @@ function valiateForm(){
   return {
     screenshotFolder: screenshotFolder,
     projectName: projectName,
-    caseList: caseList
+    caseList: caseList,
+    initialInput:initialInput
   }
 }
 

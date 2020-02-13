@@ -1,6 +1,8 @@
 const fs = require("fs"),
-  path = require("path");
+  path = require("path"),
+  axios = require("axios");
 
+// 创建文件夹
 function mkdirs(dirname, callback) {
   fs.exists(dirname, function(exists) {
     if (exists) {
@@ -16,7 +18,6 @@ function mkdirs(dirname, callback) {
     }
   });
 }
-
 function mkdirsSync(dirname) {
   if (fs.existsSync(dirname)) {
     return true;
@@ -27,6 +28,7 @@ function mkdirsSync(dirname) {
     }
   }
 }
+// 删除文件夹
 function delDir(path, isCurrent){
   let files = [];
   if(fs.existsSync(path)){
@@ -44,9 +46,60 @@ function delDir(path, isCurrent){
     }
   }
 }
+// 拷贝文件夹
+function copyDir(src, dist, fn){
+  let paths = fs.readdirSync(src); //同步读取当前目录
+  let pathsLength = paths.length;
+  let n = 0;
+  paths.forEach(function(path){
+    var _src = src + '/' + path;
+    var _dist = dist + '/' + path;
+    fs.stat(_src, function(err, stats){ //stats 该对象 包含文件属性
+      if(err) throw err;
+      if(stats.isFile()){ //如果是个文件则拷贝
+        let readable = fs.createReadStream(_src);//创建读取流
+        let writable = fs.createWriteStream(_dist);//创建写入流
+        writable.on('finish', function() {
+          n++;
+          if(n === pathsLength && fn){
+            console.log('end');
+            fn();
+          }
+        });
+        readable.pipe(writable)
+      }else if(stats.isDirectory()){ //是目录则 递归
+        checkDirectory(_src, _dist, copyDir);
+      }
+    });
+  });
+}
+// 检查文件夹
+var checkDirectory = function(src, dist, callback){
+  fs.access(dist, fs.constants.F_OK, (err) => {
+    if(err){
+      fs.mkdirSync(dist);
+      callback(src, dist);
+    }else{
+      callback(src, dist);
+    }
+   });
+};
+
+var uploadFile = function(path){
+  var data = new FormData();
+  data.append("file", fs.createReadStream(path));
+  data.append("type", "avatar");
+
+  return axios({
+    method: "post",
+    url: "http://localhost:5000/upload",
+    data: data
+  })
+}
 
 module.exports = {
   mkdirs,
   mkdirsSync,
-  delDir
+  delDir,
+  copyDir
 };
