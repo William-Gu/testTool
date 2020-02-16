@@ -1,6 +1,6 @@
 const fs = require("fs"),
   path = require("path"),
-  axios = require("axios");
+  request = require("request");
 
 // 创建文件夹
 function mkdirs(dirname, callback) {
@@ -62,7 +62,7 @@ function copyDir(src, dist, fn){
         writable.on('finish', function() {
           n++;
           if(n === pathsLength && fn){
-            console.log('end');
+            console.log('copyDir end');
             fn();
           }
         });
@@ -85,15 +85,18 @@ var checkDirectory = function(src, dist, callback){
    });
 };
 
-var uploadFile = function(path){
-  var data = new FormData();
-  data.append("file", fs.createReadStream(path));
-  data.append("type", "avatar");
-
-  return axios({
-    method: "post",
-    url: "http://localhost:5000/upload",
-    data: data
+var uploadFile = function(form){
+  return new Promise((res,rej)=>{
+    request.post({
+      url:"http://10.18.40.195:6700/upload/testcase",
+      formData: form
+    },function(err, resp, data){
+      if(err){
+        rej(err)
+      }else{
+        res(JSON.parse(data))
+      }
+    })
   })
 }
 
@@ -101,5 +104,6 @@ module.exports = {
   mkdirs,
   mkdirsSync,
   delDir,
-  copyDir
+  copyDir,
+  uploadFile
 };

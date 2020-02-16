@@ -1,4 +1,4 @@
-const {ipcRenderer, remote} = require('electron')
+const {ipcRenderer, remote, dialog} = require('electron')
 
 const $select_case = $("#select_case");
 let formData={};
@@ -92,7 +92,7 @@ $("#select_case").on('change', function(e){
   formData.currentCase = v;
 })
 $("#btn_end").on('click', (e) => {
-
+  ipcRenderer.send('close')
 })
 
 ipcRenderer.on('createProjectResponse', (event, arg) => {
@@ -111,4 +111,12 @@ ipcRenderer.on('createProjectResponse', (event, arg) => {
     // 2.调整窗口大小
     remote.getCurrentWindow().setSize(800, 600)
   }
+})
+
+ipcRenderer.on('onSuccess_toggleCurrentCase', (event, arg) => {
+  if(arg.code === 200){
+
+  }else{
+    console.log(arg);
+  } 
 })
