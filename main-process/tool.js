@@ -51,6 +51,10 @@ function copyDir(src, dist, fn){
   let paths = fs.readdirSync(src); //同步读取当前目录
   let pathsLength = paths.length;
   let n = 0;
+  if(paths.length === 0) {
+    fn();
+    return false;
+  }
   paths.forEach(function(path){
     var _src = src + '/' + path;
     var _dist = dist + '/' + path;

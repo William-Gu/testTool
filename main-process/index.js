@@ -13,7 +13,7 @@ const { app, ipcMain } = require("electron"),
 ipcMain.on("createProject", (event, arg) => {
   let data = arg,
     tempSpace = path.resolve(__dirname, "../tempSpace");
-  console.log(tempSpace, fs.existsSync(tempSpace));
+  console.log(data, tempSpace, fs.existsSync(tempSpace));
 
   if (!fs.existsSync(tempSpace)) {
     fs.mkdirSync(tempSpace);
@@ -21,7 +21,7 @@ ipcMain.on("createProject", (event, arg) => {
     delDir(tempSpace);
   }
 
-  data.caseList.forEach(item => {
+  data.caseList.split("\n").forEach(item => {
     let filePath = path.join(__dirname, "../tempSpace", item);
     mkdirsSync(filePath);
   });
@@ -67,11 +67,15 @@ ipcMain.on("toggleCurrentCase", (event, arg) => {
         )
           .then(res => {
             console.log(4.1, res);
-            let data = res.map(i => i.data);
-            event.sender.send("onSuccess_toggleCurrentCase", {
-              code: 200,
-              data: data
-            });
+            let data = res.findIndex(item => item.code !== 200)
+            if( data === -1){
+              event.sender.send("onSuccess_toggleCurrentCase", {
+                code: 200,
+                data: res.map(i => i.data)
+              });
+            }else{
+              throw new Error(data[0])
+            }
           })
           .catch(err => {
             console.log(4.2, err);
@@ -83,6 +87,11 @@ ipcMain.on("toggleCurrentCase", (event, arg) => {
           .finally(data => {
             console.log(4.3, data);
           });
+      }else{
+        event.sender.send("onSuccess_toggleCurrentCase", {
+          code: 200,
+          data: []
+        });
       }
     });
   }

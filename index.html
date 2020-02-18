@@ -1,23 +1,58 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>测试小工具</title>
-    <link rel="stylesheet" href="src/css/index.css">
-    <link rel="stylesheet" href="src/css/element-ui.css">
-    <script src="src/js/vue.min.js"></script>
-    <script src="src/js/element-ui.js"></script>
-    <script src="src/js/zepto.min.js"></script>
-    <script src="src/js/common.js"></script>
-    <link rel="import" href="sections/index.html">
-    <link rel="import" href="sections/cp.html">
-    <style>
-    </style>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script>
-      require('./assets/imports')
-    </script>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <title>测试小工具</title>
+  <link rel="stylesheet" href="src/css/index.css">
+  <link rel="stylesheet" href="src/css/element-ui.css">
+  <script src="src/js/vue.min.js"></script>
+  <script src="src/js/element-ui.js"></script>
+  <script src="src/js/zepto.min.js"></script>
+  <style>
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <el-main style="margin-right:20px;">
+      <el-row v-if="currentPage === 1">
+        <el-form ref="form" :model="form" :rules="formRules" label-width="100px">
+          <el-form-item prop="screenshotFolder" label="目录地址：">
+            <el-input v-model="form.screenshotFolder"></el-input>
+          </el-form-item>
+          <el-form-item prop="projectName" label="项目名称：">
+            <el-input v-model="form.projectName"></el-input>
+          </el-form-item>
+          <el-form-item prop="caseList" label="case列表：">
+            <el-input type="textarea" v-model="form.caseList"></el-input>
+          </el-form-item>
+          <el-form-item label="初始化项目：">
+            <el-radio-group v-model="form.initialInput">
+              <el-radio :label="true">是</el-radio>
+              <el-radio :label="false">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="createProject">确定</el-button>
+          </el-form-item>
+        </el-form>
+      </el-row>
+      <el-row v-if="currentPage === 2" v-loading="isLoading">
+        <el-row style="margin-bottom:20px;">
+          <el-button type="primary" :disabled="btn_disabled_preview" @click="toggleCase_preview">&lt;</el-button>
+          <el-select v-model="form.currentCase">
+            <el-option v-for="(item, key) in caseList2" :key="key" :label="item" :value="item"></el-option>
+          </el-select>
+          <el-button type="primary" :disabled="btn_disabled_next" @click="toggleCase_next">&gt;</el-button>
+        </el-row>
+        <el-row>
+          <el-button type="primary" @click="close">结束测试</el-button>
+        </el-row>
+      </el-row>
+    </el-main>
+  </div>
+  <script src="src/js/index.js"></script>
+</body>
+
 </html>
