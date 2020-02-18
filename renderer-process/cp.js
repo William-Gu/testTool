@@ -72,8 +72,8 @@ function caseValitor(params){
     }
     return params;
   }
-
 }
+
 $("#btn_preview").on('click', function(e){
   let v = caseValitor(0);
   console.log(formData);
@@ -112,7 +112,17 @@ ipcRenderer.on('createProjectResponse', (event, arg) => {
     remote.getCurrentWindow().setSize(800, 600)
   }
 })
+function toggleState(state){
+  if(state){
 
+  }else{
+    $("#btn_preview")
+    $("#btn_next")
+    $("#select_case")
+    $("#btn_end")
+  }
+
+}
 ipcRenderer.on('onSuccess_toggleCurrentCase', (event, arg) => {
   if(arg.code === 200){
 

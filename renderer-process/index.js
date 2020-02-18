@@ -1,5 +1,16 @@
 const {ipcRenderer, remote} = require('electron')
 
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+
+
+
+
 // 表单当前信息
 var formData = {
   screenshotFolder: "", // 截图工具目录
