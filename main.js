@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron')
 const path = require('path')
 const glob = require('glob')
+const child_process = require('child_process');
 
 // 保持对window对象的全局引用，如果不这么做的话，当JavaScript对象被
 // 垃圾回收的时候，window对象将会自动的关闭
@@ -38,9 +39,8 @@ function createWindow () {
     // 与此同时，你应该删除相应的元素。
     win = null
   })
-  const child_process = require('child_process');
   var old = child_process.spawn('start',['FSCapture.exe'], {
-    cwd: path.join(__dirname,"./others/FastStone"),//运行子进程的目录
+    cwd: path.join(__dirname,"./src/FastStone"),//运行子进程的目录
     detached: true, //让父进程退出后，子进程能独立运行
     shell: process.platform === 'win32',
     windowsHide: true

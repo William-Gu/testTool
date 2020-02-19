@@ -3,17 +3,47 @@ const { app, ipcMain } = require("electron"),
     mkdirsSync,
     copyDir,
     delDir,
-    uploadFile
+    uploadFile,
+    writeJson
   } = require("./tool.js"),
   fs = require("fs"),
   os = require("os"),
-  path = require("path");
+  path = require("path"),
+  configPath = path.join(__dirname, "../src/config/config.json");
+
+ipcMain.on("getConfig", (event, arg) => {
+  let data = fs.existsSync(configPath);
+  
+  if(data){
+    data = fs.readFileSync(configPath);
+    data = JSON.parse(data.toString());
+  }else{
+    data = {
+      screenshotFolder: "",
+      projectName:"",
+      caseList: "",
+      initialInput: true,
+      currentCase:""
+    }
+  }
+  event.returnValue = data;
+  
+})
 
 // 创建项目、目录
 ipcMain.on("createProject", (event, arg) => {
   let data = arg,
     tempSpace = path.resolve(__dirname, "../tempSpace");
   console.log(data, tempSpace, fs.existsSync(tempSpace));
+
+  var str = JSON.stringify(arg);
+  fs.writeFile(configPath, str, function(err){
+    if(err){
+      console.error(err);
+    }
+    console.log('----------新增成功-------------');
+  })
+
 
   if (!fs.existsSync(tempSpace)) {
     fs.mkdirSync(tempSpace);
@@ -25,17 +55,17 @@ ipcMain.on("createProject", (event, arg) => {
     let filePath = path.join(__dirname, "../tempSpace", item);
     mkdirsSync(filePath);
   });
-  event.sender.send("createProjectResponse", { code: 200, data: data });
+  event.returnValue = { code: 200, data: data };
 });
 
-ipcMain.on("toggleCurrentCase", (event, arg) => {
+ipcMain.on("toggleCurrentCase", (event, arg, isClose) => {
   // {
   //   caseList: [ 'case1', 'case2', 'case3', 'case4', 'case5' ],
   //   currentCase: 'case1',
   //   projectName: 'CRM',
   //   screenshotFolder: 'C:\\Users\\gujj\\Documents\\cut'
   // }
-  console.log("0. toggleCurrentCase: ", arg);
+  console.log("0. toggleCurrentCase: ", arg, isClose);
   let data = arg;
   let targetFolder = path.resolve( __dirname, "../tempSpace/" + data.currentCase);
 
@@ -57,7 +87,7 @@ ipcMain.on("toggleCurrentCase", (event, arg) => {
         Promise.all(
           paths.map(item => {
             let params = {
-              username: username,
+              userName: username,
               projectName: data.projectName,
               caseName: data.currentCase,
               file: fs.createReadStream(item)
@@ -73,6 +103,9 @@ ipcMain.on("toggleCurrentCase", (event, arg) => {
                 code: 200,
                 data: res.map(i => i.data)
               });
+              if(isClose){
+                app.quit();
+              }
             }else{
               throw new Error(data[0])
             }
@@ -88,6 +121,9 @@ ipcMain.on("toggleCurrentCase", (event, arg) => {
             console.log(4.3, data);
           });
       }else{
+        if(isClose){
+          app.quit();
+        }
         event.sender.send("onSuccess_toggleCurrentCase", {
           code: 200,
           data: []

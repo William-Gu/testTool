@@ -7,11 +7,11 @@ var app = new Vue({
     isLoading: false,
     currentPage: 1,
     form: {
-      screenshotFolder: "C:\\Users\\gujj\\Documents\\cut",// 截图工具目录
-      projectName:"CRM", //项目名称
-      caseList: "case1\ncase2\ncase3\ncase4\ncase5",// 测试用例case列表
+      screenshotFolder: "",// 截图工具目录
+      projectName:"", //项目名称
+      caseList: "",// 测试用例case列表
       initialInput: true,
-      currentCase:"case1"
+      currentCase:""
     },
     formRules:{
       screenshotFolder: {required: true, message: "请输入文件目录地址"},
@@ -42,19 +42,27 @@ var app = new Vue({
   },
   watch:{
     "form.currentCase":function(val,oldVal){
-      this.toggleCase(val, oldVal);
+      if(oldVal){
+        this.toggleCase(oldVal);
+      }
     }
   },
+  created(){
+    let data = ipcRenderer.sendSync('getConfig')
+    this.form = data;
+  },
   methods:{
-    createProject(){      
+    createProject(){
       this.$refs.form.validate((valid)=>{
         if(valid){
           let params = this.form;
           
-          ipcRenderer.send('createProject', this.form)
-          
-          this.form.currentCase = this.caseList2.length > 0 ? this.caseList2[0] : "";
-          this.currentPage = 2;
+          let data = ipcRenderer.sendSync('createProject', this.form)
+          if(data.code === 200){
+            remote.getCurrentWindow().setSize(800, 500)
+            this.form.currentCase = this.caseList2.length > 0 ? this.caseList2[0] : "";
+            this.currentPage = 2;
+          }
         }
       })
     },
@@ -66,9 +74,9 @@ var app = new Vue({
       let index = this.caseList2.indexOf(this.form.currentCase)
       this.form.currentCase = this.caseList2[index+1];
     },
-    toggleCase(val, oldVal){
+    toggleCase(val){
       let form = Object.assign({}, this.form);
-      form.currentCase = oldVal;
+      form.currentCase = val;
       
       this.isLoading = true;
       ipcRenderer.send('toggleCurrentCase', form)
@@ -82,15 +90,10 @@ var app = new Vue({
       })
     },
     close(){
-      this.toggleCase("", this.currentCase)
-
+      this.isLoading = true;      
+      ipcRenderer.send('toggleCurrentCase', this.form, true)
       // ipcRenderer.send('close')
     }
-  }
-})
-ipcRenderer.on('createProjectResponse', (event, arg) => {  
-  if(arg.code === 200){
-    remote.getCurrentWindow().setSize(800, 600)
   }
 })
 

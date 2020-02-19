@@ -92,10 +92,10 @@ var checkDirectory = function(src, dist, callback){
 var uploadFile = function(form){
   return new Promise((res,rej)=>{
     request.post({
-      url:"http://10.18.40.195:6700/upload/testcase",
+      url: "http://10.18.40.195:6700/upload/testcase",
       formData: form
-    },function(err, resp, data){
-      if(err){
+    },function(err, resp, data){            
+      if(err || data === "Not Found"){
         rej(err)
       }else{
         res(JSON.parse(data))
@@ -103,11 +103,20 @@ var uploadFile = function(form){
     })
   })
 }
-
+function writeJson(params){
+  var str = JSON.stringify(params);
+  fs.writeFile('./src/config/config.json',str,function(err){
+    if(err){
+      console.error(err);
+    }
+    console.log('----------新增成功-------------');
+  })
+}
 module.exports = {
   mkdirs,
   mkdirsSync,
   delDir,
   copyDir,
-  uploadFile
+  uploadFile,
+  writeJson
 };
