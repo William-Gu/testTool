@@ -5,7 +5,7 @@
   "scripts": {
     "start": "electron .",
     "openFSCapture": "start others/FastStone/FSCapture.exe",
-    "build": "electron-packager ./ TesterCase_Tool --platform=win32 --arch=x64 --icon=./assets/app.ico --out=./build --asar --app-version=0.0.1 --overwrite"
+    "build": "electron-packager ./ TesterCase_Tool --platform=win32 --arch=x64 --icon=./assets/app.ico --out=./build --app-version=0.0.1 --overwrite"
   },
   "devDependencies": {
     "electron": "^7.1.9"
