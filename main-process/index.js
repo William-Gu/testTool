@@ -104,7 +104,7 @@ ipcMain.on("toggleCurrentCase", (event, arg, isClose) => {
                 data: res.map(i => i.data)
               });
               if(isClose){
-                app.quit();
+                app.exit();
               }
             }else{
               throw new Error(data[0])
@@ -122,7 +122,7 @@ ipcMain.on("toggleCurrentCase", (event, arg, isClose) => {
           });
       }else{
         if(isClose){
-          app.quit();
+          app.exit();
         }
         event.sender.send("onSuccess_toggleCurrentCase", {
           code: 200,
