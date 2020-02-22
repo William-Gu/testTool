@@ -9,7 +9,8 @@ const { app, ipcMain } = require("electron"),
   fs = require("fs"),
   os = require("os"),
   path = require("path"),
-  configPath = path.join(__dirname, "../src/config/config.json");
+  configPath = path.join(__dirname, "../src/config/config.json"),
+  tempSpace = path.join(app.getPath("documents"), "TesterCaseTool");
 
 ipcMain.on("getConfig", (event, arg) => {
   let data = fs.existsSync(configPath);
@@ -32,9 +33,7 @@ ipcMain.on("getConfig", (event, arg) => {
 
 // 创建项目、目录
 ipcMain.on("createProject", (event, arg) => {
-  let data = arg,
-    tempSpace = path.resolve(__dirname, "../tempSpace");
-  console.log(data, tempSpace, fs.existsSync(tempSpace));
+  let data = arg;
 
   var str = JSON.stringify(arg);
   fs.writeFile(configPath, str, function(err){
@@ -52,22 +51,15 @@ ipcMain.on("createProject", (event, arg) => {
   }
 
   data.caseList.split("\n").forEach(item => {
-    let filePath = path.join(__dirname, "../tempSpace", item);
+    let filePath = path.join(tempSpace, item);
     mkdirsSync(filePath);
   });
   event.returnValue = { code: 200, data: data };
 });
 
 ipcMain.on("toggleCurrentCase", (event, arg, isClose) => {
-  // {
-  //   caseList: [ 'case1', 'case2', 'case3', 'case4', 'case5' ],
-  //   currentCase: 'case1',
-  //   projectName: 'CRM',
-  //   screenshotFolder: 'C:\\Users\\gujj\\Documents\\cut'
-  // }
-  console.log("0. toggleCurrentCase: ", arg, isClose);
   let data = arg;
-  let targetFolder = path.resolve( __dirname, "../tempSpace/" + data.currentCase);
+  let targetFolder = path.join(tempSpace, data.currentCase);
 
   if (fs.existsSync(targetFolder)) {
     // 1. 将截图目录中的文件拷贝到case目录
@@ -99,6 +91,7 @@ ipcMain.on("toggleCurrentCase", (event, arg, isClose) => {
             console.log(4.1, res);
             let data = res.findIndex(item => item.code !== 200)
             if( data === -1){
+              delDir(targetFolder);
               event.sender.send("onSuccess_toggleCurrentCase", {
                 code: 200,
                 data: res.map(i => i.data)
