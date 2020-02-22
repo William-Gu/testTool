@@ -59,7 +59,7 @@ var app = new Vue({
           
           let data = ipcRenderer.sendSync('createProject', this.form)
           if(data.code === 200){
-            remote.getCurrentWindow().setSize(800, 500)
+            remote.getCurrentWindow().setSize(390, 250)
             this.form.currentCase = this.caseList2.length > 0 ? this.caseList2[0] : "";
             this.currentPage = 2;
           }

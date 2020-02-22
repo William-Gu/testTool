@@ -92,7 +92,7 @@ var checkDirectory = function(src, dist, callback){
 var uploadFile = function(form){
   return new Promise((res,rej)=>{
     request.post({
-      url: "http://10.18.40.195:6700/upload/testcase",
+      url: "http://testertool.internal.mob.com/api/upload/testcase",
       formData: form
     },function(err, resp, data){            
       if(err || data === "Not Found"){

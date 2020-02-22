@@ -12,8 +12,8 @@
   </style>
 </head>
 <body>
-  <div id="app" style="min-width:400px;">
-    <el-main style="margin-right:20px;">
+  <div id="app" style="margin:0 auto;min-width:370px;max-width: 500px;">
+    <el-main>
       <el-row v-if="currentPage === 1">
         <el-form ref="form" :model="form" :rules="formRules" label-width="100px">
           <el-form-item prop="screenshotFolder" label="目录地址：">
