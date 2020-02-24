@@ -17,13 +17,13 @@
       <el-row v-if="currentPage === 1">
         <el-form ref="form" :model="form" :rules="formRules" label-width="100px">
           <el-form-item prop="screenshotFolder" label="目录地址：">
-            <el-input v-model="form.screenshotFolder"></el-input>
+            <el-input v-model="form.screenshotFolder" placeholder="请输入截图的目录地址"></el-input>
           </el-form-item>
           <el-form-item prop="projectName" label="项目名称：">
-            <el-input v-model="form.projectName"></el-input>
+            <el-input v-model="form.projectName" placeholder="请输入项目名称"></el-input>
           </el-form-item>
           <el-form-item prop="caseList" label="case列表：">
-            <el-input type="textarea" v-model="form.caseList"></el-input>
+            <el-input type="textarea" v-model="form.caseList" placeholder="测试用例以换行符分割"></el-input>
           </el-form-item>
           <el-form-item label="初始化项目：">
             <el-radio-group v-model="form.initialInput">

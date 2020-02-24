@@ -94,11 +94,15 @@ var uploadFile = function(form){
     request.post({
       url: "http://testertool.internal.mob.com/api/upload/testcase",
       formData: form
-    },function(err, resp, data){            
+    },function(err, resp, data){
       if(err || data === "Not Found"){
         rej(err)
       }else{
-        res(JSON.parse(data))
+        try{
+          res(JSON.parse(data))
+        }catch(err){
+          rej(err)
+        }
       }
     })
   })
@@ -117,6 +121,5 @@ module.exports = {
   mkdirsSync,
   delDir,
   copyDir,
-  uploadFile,
-  writeJson
+  uploadFile
 };

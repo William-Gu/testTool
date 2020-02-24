@@ -48,10 +48,27 @@ var app = new Vue({
     }
   },
   created(){
-    let data = ipcRenderer.sendSync('getConfig')
-    this.form = data;
+    this.form = this.getConfig();
   },
   methods:{
+    getConfig(){
+      let data = window.localStorage.getItem("baseConfig");
+      if(data){
+        data = JSON.parse(data);
+      }else{
+        let config = ipcRenderer.sendSync('getDefaultDocumentsPath')
+        let baseConfig = {
+          screenshotFolder: config,
+          projectName:"",
+          caseList: "case1\ncase2\ncase3\ncase4",
+          initialInput: true,
+          currentCase:""
+        }
+        data = baseConfig;
+        window.localStorage.setItem("baseConfig", JSON.stringify(data))
+      }
+      return data;
+    },
     createProject(){
       this.$refs.form.validate((valid)=>{
         if(valid){
@@ -59,7 +76,10 @@ var app = new Vue({
           
           let data = ipcRenderer.sendSync('createProject', this.form)
           if(data.code === 200){
-            remote.getCurrentWindow().setSize(390, 250)
+            remote.getCurrentWindow().setSize(390, 250);
+
+            window.localStorage.setItem("baseConfig", JSON.stringify(this.form))
+
             this.form.currentCase = this.caseList2.length > 0 ? this.caseList2[0] : "";
             this.currentPage = 2;
           }
@@ -81,10 +101,10 @@ var app = new Vue({
       this.isLoading = true;
       ipcRenderer.send('toggleCurrentCase', form)
     },
-    showMessage(str = ""){
+    showMessage(str = "", duration = 500 ){
       this.$message({
         type: "error",
-        duration: 500,
+        duration: duration,
         showClose: true,
         message: str
       })
@@ -105,4 +125,8 @@ ipcRenderer.on('onSuccess_toggleCurrentCase', (event, arg) => {
   }else{
     app.showMessage(arg.data)
   } 
+})
+
+ipcRenderer.on('onError', (event, arg) => {
+  app.showMessage(arg, 5000)
 })

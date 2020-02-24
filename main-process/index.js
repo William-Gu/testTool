@@ -3,47 +3,26 @@ const { app, ipcMain } = require("electron"),
     mkdirsSync,
     copyDir,
     delDir,
-    uploadFile,
-    writeJson
+    uploadFile
   } = require("./tool.js"),
   fs = require("fs"),
   os = require("os"),
   path = require("path"),
-  configPath = path.join(__dirname, "../src/config/config.json"),
   tempSpace = path.join(app.getPath("documents"), "TesterCaseTool");
 
-ipcMain.on("getConfig", (event, arg) => {
-  let data = fs.existsSync(configPath);
-  
-  if(data){
-    data = fs.readFileSync(configPath);
-    data = JSON.parse(data.toString());
-  }else{
-    data = {
-      screenshotFolder: "",
-      projectName:"",
-      caseList: "",
-      initialInput: true,
-      currentCase:""
-    }
-  }
-  event.returnValue = data;
-  
+ipcMain.on("getDefaultDocumentsPath", (event, arg) => {
+  event.returnValue = path.join(app.getPath("documents"), "cut")
 })
 
 // 创建项目、目录
 ipcMain.on("createProject", (event, arg) => {
   let data = arg;
+  // 没有截图文件夹即创建
+  if(!fs.existsSync(data.screenshotFolder)){
+    mkdirsSync(data.screenshotFolder);
+  }
 
-  var str = JSON.stringify(arg);
-  fs.writeFile(configPath, str, function(err){
-    if(err){
-      console.error(err);
-    }
-    console.log('----------新增成功-------------');
-  })
-
-
+  // 初始化目标文件夹
   if (!fs.existsSync(tempSpace)) {
     fs.mkdirSync(tempSpace);
   } else if (data.initialInput) {
@@ -88,7 +67,6 @@ ipcMain.on("toggleCurrentCase", (event, arg, isClose) => {
           })
         )
           .then(res => {
-            console.log(4.1, res);
             let data = res.findIndex(item => item.code !== 200)
             if( data === -1){
               delDir(targetFolder);
@@ -97,25 +75,21 @@ ipcMain.on("toggleCurrentCase", (event, arg, isClose) => {
                 data: res.map(i => i.data)
               });
               if(isClose){
-                app.exit();
+                app.exit(0);
               }
             }else{
               throw new Error(data[0])
             }
           })
           .catch(err => {
-            console.log(4.2, err);
             event.sender.send("onSuccess_toggleCurrentCase", {
               code: 500,
-              data: "文件上传错误"
+              data: "文件上传错误:" + err
             });
           })
-          .finally(data => {
-            console.log(4.3, data);
-          });
       }else{
         if(isClose){
-          app.exit();
+          app.exit(0);
         }
         event.sender.send("onSuccess_toggleCurrentCase", {
           code: 200,
